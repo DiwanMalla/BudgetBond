@@ -13,8 +13,11 @@ import {
   Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useUser, UserButton } from "@clerk/nextjs";
 
 export default function Home() {
+  const { isSignedIn, user } = useUser();
+
   const features = [
     {
       icon: <ShoppingCart className="h-12 w-12" />,
@@ -94,19 +97,41 @@ export default function Home() {
           </div>
           <div className="flex items-center space-x-2 md:space-x-3">
             <ThemeToggle />
-            <Link
-              href="/sign-in"
-              className="text-foreground/80 hover:text-foreground font-medium px-3 md:px-4 py-2 rounded-lg hover:bg-muted/50 text-sm md:text-base"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/sign-up"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:from-indigo-700 hover:to-purple-700 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm md:text-base"
-            >
-              <span className="hidden sm:inline">Get Started</span>
-              <span className="sm:hidden">Start</span>
-            </Link>
+            {isSignedIn ? (
+              // Authenticated user menu
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-foreground/80 hover:text-foreground font-medium px-3 md:px-4 py-2 rounded-lg hover:bg-muted/50 text-sm md:text-base"
+                >
+                  Dashboard
+                </Link>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8 md:w-9 md:h-9",
+                    },
+                  }}
+                />
+              </>
+            ) : (
+              // Guest user menu
+              <>
+                <Link
+                  href="/sign-in"
+                  className="text-foreground/80 hover:text-foreground font-medium px-3 md:px-4 py-2 rounded-lg hover:bg-muted/50 text-sm md:text-base"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:from-indigo-700 hover:to-purple-700 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm md:text-base"
+                >
+                  <span className="hidden sm:inline">Get Started</span>
+                  <span className="sm:hidden">Start</span>
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </header>
@@ -124,17 +149,29 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 md:mb-8 leading-tight">
-            <span className="text-foreground">Shopping Made</span>
-            <br />
-            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse">
-              Effortless
-            </span>
+            {isSignedIn ? (
+              <>
+                <span className="text-foreground">Welcome back,</span>
+                <br />
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  {user?.firstName || "User"}!
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-foreground">Shopping Made</span>
+                <br />
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse">
+                  Effortless
+                </span>
+              </>
+            )}
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground/70 mb-8 md:mb-12 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-            The most beautiful way to create collaborative shopping lists, split
-            bills intelligently, and track spending with your friends, family,
-            or roommates.
+            {isSignedIn
+              ? "Ready to create some collaborative shopping lists and manage your expenses with friends and family?"
+              : "The most beautiful way to create collaborative shopping lists, split bills intelligently, and track spending with your friends, family, or roommates."}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-12 md:mb-16 px-4 sm:px-0">
@@ -142,21 +179,34 @@ export default function Home() {
               href="/dashboard"
               className="group bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl text-base md:text-lg font-semibold hover:from-indigo-700 hover:to-purple-700 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 flex items-center gap-2 w-full sm:w-auto justify-center"
             >
-              <span className="hidden sm:inline">Start Shopping Today</span>
-              <span className="sm:hidden">Start Shopping</span>
+              {isSignedIn ? (
+                <>
+                  <span className="hidden sm:inline">Go to Dashboard</span>
+                  <span className="sm:hidden">Dashboard</span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden sm:inline">Start Shopping Today</span>
+                  <span className="sm:hidden">Start Shopping</span>
+                </>
+              )}
               <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1" />
             </Link>
-            <Link
-              href="/demo"
-              className="group border-2 border-border text-foreground/80 px-8 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl text-base md:text-lg font-semibold hover:border-border/80 hover:bg-muted/50 flex items-center gap-2 w-full sm:w-auto justify-center"
-              onClick={(e) => {
-                e.preventDefault();
-                alert("🚧 Coming Soon! Demo is under development. Stay tuned!");
-              }}
-            >
-              <span>View Demo</span>
-              <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-            </Link>
+            {!isSignedIn && (
+              <Link
+                href="/demo"
+                className="group border-2 border-border text-foreground/80 px-8 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl text-base md:text-lg font-semibold hover:border-border/80 hover:bg-muted/50 flex items-center gap-2 w-full sm:w-auto justify-center"
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert(
+                    "🚧 Coming Soon! Demo is under development. Stay tuned!"
+                  );
+                }}
+              >
+                <span>View Demo</span>
+                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+              </Link>
+            )}
           </div>
 
           {/* Trust indicators - Better mobile layout */}

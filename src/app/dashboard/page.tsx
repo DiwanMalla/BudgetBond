@@ -2,15 +2,33 @@
 
 import { useState } from "react";
 import { Plus, Users, ShoppingCart, BarChart3, Settings } from "lucide-react";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
 import { dataStore } from "@/lib/mockData";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("lists");
+  const { user, isLoaded } = useUser();
 
-  // Mock current user
-  const currentUserId = "user1";
-  const currentUser = dataStore.getUser(currentUserId);
+  // Show loading state while Clerk loads
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Mock current user - in real app, you'd use user.id from Clerk
+  const currentUserId = user?.id || "user1";
+  const currentUser = dataStore.getUser(currentUserId) || {
+    id: currentUserId,
+    name: user?.fullName || user?.firstName || "User",
+    email: user?.primaryEmailAddress?.emailAddress || "",
+    avatar: user?.imageUrl || "",
+  };
   const userGroups = dataStore.getUserGroups(currentUserId);
 
   const tabs = [
@@ -31,13 +49,16 @@ export default function Dashboard() {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
             Shopping Lists
           </h2>
-          <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+          <Link
+            href="/shopping"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+          >
             <Plus className="h-4 w-4" />
             New List
-          </button>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -52,7 +73,7 @@ export default function Dashboard() {
             return (
               <div
                 key={list.id}
-                className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 overflow-hidden"
+                className="group bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl border border-border/20 overflow-hidden hover:-translate-y-1"
               >
                 {/* Gradient top border */}
                 <div className="h-1 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
@@ -60,10 +81,10 @@ export default function Dashboard() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-foreground/90">
                         {list.name}
                       </h3>
-                      <p className="text-sm text-gray-600 font-medium">
+                      <p className="text-sm text-foreground/60 font-medium">
                         {list.groupName}
                       </p>
                     </div>
@@ -74,24 +95,26 @@ export default function Dashboard() {
 
                   <div className="space-y-3 mb-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 font-medium">
+                      <span className="text-foreground/60 font-medium">
                         Total Cost
                       </span>
-                      <span className="font-bold text-gray-900">
+                      <span className="font-bold text-foreground">
                         {formatCurrency(totalCost)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 font-medium">Updated</span>
-                      <span className="text-gray-600">
+                      <span className="text-foreground/60 font-medium">
+                        Updated
+                      </span>
+                      <span className="text-foreground/60">
                         {formatDate(list.updatedAt)}
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-full bg-gray-200 rounded-full h-3 mb-6 shadow-inner">
+                  <div className="w-full bg-muted rounded-full h-3 mb-6 shadow-inner">
                     <div
-                      className="bg-gradient-to-r from-indigo-600 to-purple-600 h-3 rounded-full transition-all duration-500 shadow-sm"
+                      className="bg-gradient-to-r from-indigo-600 to-purple-600 h-3 rounded-full shadow-sm"
                       style={{
                         width: `${
                           totalItems > 0
@@ -102,7 +125,7 @@ export default function Dashboard() {
                     ></div>
                   </div>
 
-                  <button className="w-full bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 font-semibold py-3 rounded-xl hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700 transition-all duration-200 border border-gray-200 hover:border-indigo-200">
+                  <button className="w-full bg-background hover:bg-muted/50 text-foreground font-semibold py-3 rounded-xl border border-border hover:border-primary/30 hover:text-primary">
                     View Details →
                   </button>
                 </div>
@@ -283,15 +306,15 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] -z-10"></div>
+      <div className="absolute inset-0 bg-grid-slate-100 dark:bg-grid-gray-800 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:[mask-image:linear-gradient(0deg,#000,rgba(0,0,0,0.8))] -z-10"></div>
       <div className="absolute top-0 right-0 -translate-y-12 translate-x-12">
-        <div className="w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+        <div className="w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-400/10 dark:from-blue-500/5 dark:to-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Modern Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
+      <header className="bg-card/80 backdrop-blur-md shadow-lg border-b border-border/20">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
@@ -299,22 +322,27 @@ export default function Dashboard() {
                 <ShoppingCart className="h-7 w-7 text-white" />
               </div>
               <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   BudgetBond
                 </span>
-                <p className="text-sm text-gray-600">Dashboard</p>
+                <p className="text-sm text-foreground/60">Dashboard</p>
               </div>
             </div>
-            <div className="flex items-center space-x-6">
-              <div className="text-right">
-                <p className="text-sm text-gray-600">Welcome back,</p>
-                <p className="font-semibold text-gray-900">
+            <div className="flex items-center space-x-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm text-foreground/60">Welcome back,</p>
+                <p className="font-semibold text-foreground">
                   {currentUser?.name}!
                 </p>
               </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                {currentUser?.name?.[0]}
-              </div>
+              <ThemeToggle />
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-12 h-12",
+                  },
+                }}
+              />
             </div>
           </div>
         </div>
@@ -324,7 +352,7 @@ export default function Dashboard() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Modern Sidebar */}
           <div className="lg:w-1/4">
-            <nav className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
+            <nav className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-border/20">
               <ul className="space-y-3">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -332,10 +360,10 @@ export default function Dashboard() {
                     <li key={tab.id}>
                       <button
                         onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                        className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left ${
                           activeTab === tab.id
                             ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transform scale-105"
-                            : "text-gray-700 hover:bg-gray-100/50 hover:transform hover:scale-105"
+                            : "text-foreground/70 hover:bg-muted/50 hover:text-foreground hover:transform hover:scale-105"
                         }`}
                       >
                         <Icon className="h-5 w-5" />
