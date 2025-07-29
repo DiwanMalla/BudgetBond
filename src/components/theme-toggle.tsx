@@ -17,7 +17,7 @@ export function ThemeToggle() {
       <div className="w-9 h-9 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
     );
   }
-
+  console.log("Current theme:", theme);
   return (
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
