@@ -124,9 +124,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 md:mb-8 leading-tight">
-            <span className="text-foreground">
-              Shopping Made
-            </span>
+            <span className="text-foreground">Shopping Made</span>
             <br />
             <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse">
               Effortless
@@ -400,7 +398,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/features"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -417,7 +415,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/pricing"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -434,7 +432,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/demo"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert("🚧 Coming Soon! Demo is under development.");
@@ -447,7 +445,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/mobile"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert("🚧 Coming Soon! Mobile app is under development.");
@@ -471,7 +469,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/help"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -488,7 +486,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/contact"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -505,7 +503,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/privacy"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -522,7 +520,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/terms"
-                    className="text-foreground/70 hover:text-primary transition-colors text-sm inline-flex items-center gap-1 group"
+                    className="text-foreground/70 hover:text-primary text-sm inline-flex items-center gap-1 group"
                     onClick={(e) => {
                       e.preventDefault();
                       alert(
@@ -570,9 +568,7 @@ export default function Home() {
                   experiences.
                 </p>
                 <div className="flex items-center justify-center md:justify-start gap-2 mt-1">
-                  <span className="text-foreground/50 text-xs">
-                    Built by
-                  </span>
+                  <span className="text-foreground/50 text-xs">Built by</span>
                   <div className="flex items-center gap-1">
                     <div className="w-4 h-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">D</span>
@@ -592,7 +588,7 @@ export default function Home() {
               <div className="hidden md:flex items-center space-x-6 order-1 md:order-2">
                 <Link
                   href="/status"
-                  className="text-sm text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 bg-green-100 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-200 dark:border-green-800"
+                  className="text-sm text-foreground/70 hover:text-primary flex items-center gap-2 bg-green-100 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-200 dark:border-green-800"
                   onClick={(e) => {
                     e.preventDefault();
                     alert(

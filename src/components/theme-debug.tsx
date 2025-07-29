@@ -14,14 +14,14 @@ export function ThemeDebug() {
     const observer = new MutationObserver(() => {
       setHtmlClass(document.documentElement.className);
     });
-    
+
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ["class"],
     });
-    
+
     setHtmlClass(document.documentElement.className);
-    
+
     return () => observer.disconnect();
   }, []);
 
@@ -33,9 +33,14 @@ export function ThemeDebug() {
       <div>Resolved: {resolvedTheme}</div>
       <div>System: {systemTheme}</div>
       <div>HTML Class: &quot;{htmlClass}&quot;</div>
-      <div>Screen: {typeof window !== 'undefined' ? window.innerWidth + 'x' + window.innerHeight : 'unknown'}</div>
+      <div>
+        Screen:{" "}
+        {typeof window !== "undefined"
+          ? window.innerWidth + "x" + window.innerHeight
+          : "unknown"}
+      </div>
       <div className="mt-2 p-2 bg-white dark:bg-red-500 text-black dark:text-white rounded">
-        Dark Mode Test: {htmlClass.includes('dark') ? 'ACTIVE' : 'INACTIVE'}
+        Dark Mode Test: {htmlClass.includes("dark") ? "ACTIVE" : "INACTIVE"}
       </div>
     </div>
   );
